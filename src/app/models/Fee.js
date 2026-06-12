@@ -6,7 +6,9 @@ const FeeSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   dueDate: { type: Date, required: true },
   status: { type: String, enum: ['Paid', 'Unpaid'], default: 'Unpaid' },
-  semester: { type: String, required: true }
+  semester: { type: String, required: true },
+  transcript: { type: String },
+  transcriptName: { type: String }
 }, { timestamps: true });
 
 export default mongoose.models.Fee || mongoose.model('Fee', FeeSchema);

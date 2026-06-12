@@ -4,6 +4,8 @@ import Credential from '../../models/Credential';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+export const dynamic = 'force-dynamic';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-12345!';
 
 export async function POST(req) {

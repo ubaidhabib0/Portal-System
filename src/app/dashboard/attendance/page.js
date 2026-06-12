@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import AttendanceTable from '../../components/AttendanceTable';
 
@@ -9,6 +11,7 @@ export default function AttendancePage() {
 
   useEffect(() => {
     const saved = localStorage.getItem('student');
+
     if (saved) {
       try {
         setStudent(JSON.parse(saved));
@@ -16,6 +19,7 @@ export default function AttendancePage() {
         console.error('Error parsing student data in AttendancePage:', e);
       }
     }
+
     setLoading(false);
   }, []);
 
@@ -30,15 +34,27 @@ export default function AttendancePage() {
 
   if (!student) {
     return (
-      <div className="portal-card" style={{ maxWidth: '500px', margin: '2rem auto', textAlign: 'center' }}>
-        <p style={{ color: 'var(--text-muted)' }}>Session expired. Please log out and sign in again.</p>
+      <div 
+        className="portal-card" 
+        style={{ 
+          maxWidth: '500px', 
+          margin: '2rem auto', 
+          textAlign: 'center' 
+        }}
+      >
+        <p style={{ color: 'var(--text-muted)' }}>
+          Session expired. Please log out and sign in again.
+        </p>
       </div>
     );
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <AttendanceTable student={student} onUpdate={handleUpdate} />
+      <AttendanceTable 
+        student={student} 
+        onUpdate={handleUpdate} 
+      />
     </div>
   );
 }

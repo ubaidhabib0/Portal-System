@@ -3,64 +3,174 @@ import Student from '../../models/Student';
 import Credential from '../../models/Credential';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
   try {
     await dbConnect();
-    const { 
-      name, 
-      regNo, 
-      email, 
-      department, 
-      session, 
-      password, 
-      securityQuestion, 
-      securityAnswer 
-    } = await req.json();
 
-    // Validate input
-    if (!name || !regNo || !email || !department || !session || !password) {
-      return Response.json({ error: 'All core fields are required.' }, { status: 400 });
+    const body = await req.json();
+
+    console.log('Signup Request:', body);
+
+    let {
+      name,
+      regNo,
+      email,
+      department,
+      session,
+      password,
+      securityQuestion,
+      securityAnswer,
+      phone,
+      university,
+    } = body;
+
+    // Normalize values
+    name = name?.trim();
+    regNo = regNo?.trim().toUpperCase();
+    email = email?.trim().toLowerCase();
+    department = department?.trim();
+    session = session?.trim();
+    password = password?.trim();
+    securityQuestion = securityQuestion?.trim();
+    securityAnswer = securityAnswer?.trim();
+    phone = phone?.trim();
+    university = university?.trim();
+
+    // Required fields validation
+    if (
+      !name ||
+      !regNo ||
+      !email ||
+      !department ||
+      !session ||
+      !password
+    ) {
+      return Response.json(
+        {
+          error:
+            'Name, Registration Number, Email, Department, Session and Password are required.',
+        },
+        { status: 400 }
+      );
     }
 
-    // Normalise regNo
-    const cleanRegNo = regNo.trim().toUpperCase();
+    // Password validation
+    if (password.length < 6) {
+      return Response.json(
+        {
+          error: 'Password must be at least 6 characters long.',
+        },
+        { status: 400 }
+      );
+    }
 
-    // Check if student exists
-    const existingStudent = await Student.findOne({ 
-      $or: [{ regNo: cleanRegNo }, { email: email.toLowerCase() }] 
+    // Email validation
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return Response.json(
+        {
+          error: 'Invalid email address.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check duplicate registration number
+    const regExists = await Student.findOne({
+      regNo,
     });
-    if (existingStudent) {
-      return Response.json({ error: 'Student with this registration number or email already exists.' }, { status: 400 });
+
+    if (regExists) {
+      return Response.json(
+        {
+          error:
+            'Registration number already exists.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check duplicate email
+    const emailExists = await Student.findOne({
+      email,
+    });
+
+    if (emailExists) {
+      return Response.json(
+        {
+          error: 'Email already registered.',
+        },
+        { status: 400 }
+      );
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
 
-    // Create Credential
+    // Create credentials
     await Credential.create({
-      regNo: cleanRegNo,
+      regNo,
       password: hashedPassword,
-      securityQuestion: securityQuestion || 'What is your favorite pet?',
-      securityAnswer: securityAnswer || 'Cat'
+      securityQuestion:
+        securityQuestion ||
+        'What is your favorite pet?',
+      securityAnswer:
+        securityAnswer || 'Not Provided',
     });
 
-    // Create Student
+    // Create student
     const student = await Student.create({
       name,
-      regNo: cleanRegNo,
-      email: email.toLowerCase(),
+      regNo,
+      email,
       department,
       session,
-      avatar: '/default.png',
+      phone:
+        phone || '+92 300 1234567',
+      university:
+        university ||
+        'Apex University of Science & Technology',
+      avatar:
+        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=faces',
       subjects: [],
       attendance: [],
-      results: []
+      results: [],
     });
 
-    return Response.json({ message: 'Student registered successfully', student }, { status: 201 });
+    console.log(
+      'Student Registered:',
+      student.regNo
+    );
+
+    return Response.json(
+      {
+        success: true,
+        message:
+          'Student registered successfully',
+        student,
+      },
+      { status: 201 }
+    );
   } catch (err) {
-    console.error('Signup error:', err);
-    return Response.json({ error: err.message || 'Server error' }, { status: 500 });
+    console.error('Signup Error:', err);
+
+    return Response.json(
+      {
+        success: false,
+        error:
+          err?.message ||
+          'Internal server error',
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

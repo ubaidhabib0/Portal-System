@@ -5,6 +5,8 @@ import Fee from '../../models/Fee';
 import Credential from '../../models/Credential';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     await dbConnect();
@@ -39,15 +41,15 @@ export async function GET() {
         code: 'CS-303',
         name: 'Computer Networks',
         credits: 3,
-        instructors: ['Dr. Haris Munir', 'Engr. Asif Ali'],
-        sections: ['CS-6A', 'CS-6C']
+        instructors: ['Dr. Haris Munir', 'Engr. Asif Ali', 'Ms. Sana Fatima'],
+        sections: ['CS-6A', 'CS-6B', 'CS-6C']
       },
       {
         code: 'CS-304',
         name: 'Software Engineering',
         credits: 3,
-        instructors: ['Prof. Noman Qureshi', 'Ms. Sadia Malik'],
-        sections: ['CS-6B', 'CS-6C']
+        instructors: ['Prof. Noman Qureshi', 'Ms. Sadia Malik', 'Dr. Khalid Mahmood'],
+        sections: ['CS-6B', 'CS-6C', 'CS-6A']
       },
       {
         code: 'CS-305',
@@ -60,8 +62,8 @@ export async function GET() {
         code: 'CS-306',
         name: 'Mobile App Development',
         credits: 3,
-        instructors: ['Mr. Ali Raza', 'Ms. Hira Fatima'],
-        sections: ['CS-6A', 'CS-6B']
+        instructors: ['Mr. Ali Raza', 'Ms. Hira Fatima', 'Engr. Usman Ghani'],
+        sections: ['CS-6A', 'CS-6B', 'CS-6C']
       }
     ]);
 
@@ -78,10 +80,12 @@ export async function GET() {
       name: 'Zubair Ahmad',
       regNo: 'CS-2021-001',
       email: 'zubair@uni.edu',
+      phone: '+92 300 1234567',
+      university: 'Apex University of Science & Technology',
       department: 'Computer Science',
       session: '2021-2025',
       gpa: 3.57,
-      avatar: '/default.png',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=faces',
       subjects: [
         {
           code: 'CS-301',

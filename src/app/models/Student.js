@@ -32,6 +32,8 @@ const StudentSchema = new mongoose.Schema({
   session: { type: String, required: true },
   gpa: { type: Number, required: true, default: 0.0 },
   avatar: { type: String, default: '/default.png' },
+  phone: { type: String, default: '+92 300 1234567' },
+  university: { type: String, default: 'Apex University of Science & Technology' },
   subjects: [EnrolledSubjectSchema],
   attendance: [AttendanceSchema],
   results: [ResultSchema]

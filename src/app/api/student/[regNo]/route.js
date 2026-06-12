@@ -1,6 +1,8 @@
 import dbConnect from '../../../lib/mongodb';
 import Student from '../../../models/Student';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req, { params }) {
   try {
     await dbConnect();

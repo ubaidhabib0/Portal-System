@@ -2,10 +2,7 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
-}
-
+// Prevent multiple connections in serverless
 let cached = global.mongoose;
 
 if (!cached) {
@@ -13,32 +10,32 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
-      console.log('MongoDB connected successfully');
-      return mongooseInstance;
-    }).catch(err => {
-      console.error('MongoDB connection error:', err);
-      throw err;
-    });
-  }
-
   try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
+    if (!MONGODB_URI) {
+      console.warn('⚠️ MONGODB_URI is missing');
+      throw new Error('MONGODB_URI not defined in environment variables');
+    }
 
-  return cached.conn;
+    // Return cached connection if exists
+    if (cached.conn) {
+      return cached.conn;
+    }
+
+    // Create new connection only if needed
+    if (!cached.promise) {
+      cached.promise = mongoose.connect(MONGODB_URI, {
+        bufferCommands: false,
+      });
+    }
+
+    cached.conn = await cached.promise;
+    return cached.conn;
+
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error.message);
+    cached.promise = null;
+    throw error;
+  }
 }
 
 export default dbConnect;

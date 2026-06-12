@@ -698,3 +698,138 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Hidden by default on screen */
+.hidden-print-transcript {
+  display: none;
+}
+
+/* Print Media Query rules */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    background-image: none !important;
+  }
+
+  /* Hide normal portal layout */
+  .portal-container, 
+  .navbar-container,
+  .sidebar-container, 
+  .portal-main-area,
+  .portal-card,
+  button,
+  footer,
+  .fixed,
+  .modal-overlay {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Display printable transcript container */
+  .hidden-print-transcript {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 12px !important;
+  }
+
+  .print-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+  }
+
+  .print-header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .print-header h3 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    letter-spacing: 1px;
+    margin-top: 5px;
+  }
+
+  .print-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+
+  .print-meta-col {
+    width: 48%;
+  }
+
+  .print-meta-col p {
+    margin: 5px 0;
+    font-size: 12px;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+  }
+
+  .print-table th {
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid #000;
+  }
+
+  .print-table td {
+    padding: 10px;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .print-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f5f5f5 !important;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 50px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 10px;
+    color: #555;
+  }
+
+  .print-signature {
+    text-align: center;
+  }
+
+  .print-signature .sig-line {
+    width: 150px;
+    border-bottom: 1px solid #000;
+    margin-bottom: 5px;
+  }
+}

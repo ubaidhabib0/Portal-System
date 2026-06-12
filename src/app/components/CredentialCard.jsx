@@ -86,11 +86,17 @@ export default function CredentialCard({ regNo }) {
 
   return (
     <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl w-full max-w-xl mx-auto">
-      <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
-        <Lock className="w-5 h-5 text-indigo-400" />
-        Security Credentials
-      </h3>
-      <p className="text-xs text-slate-400 mb-6">Manage password and account recovery settings</p>
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+          <Lock className="w-5 h-5" />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-white">Security Credentials</h3>
+          <p className="text-xs text-slate-400">Manage password and account recovery settings</p>
+        </div>
+      </div>
+
+      <hr className="border-white/10 my-4" />
 
       {error && (
         <div className="mb-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
@@ -111,10 +117,10 @@ export default function CredentialCard({ regNo }) {
         <button
           type="button"
           onClick={() => { setAuthMode('password'); setError(''); setSuccess(''); }}
-          className={`py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${
+          className={`py-2.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${
             authMode === 'password'
-              ? 'bg-indigo-600 text-white shadow'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <KeyRound className="w-3.5 h-3.5" />
@@ -123,10 +129,10 @@ export default function CredentialCard({ regNo }) {
         <button
           type="button"
           onClick={() => { setAuthMode('question'); setError(''); setSuccess(''); }}
-          className={`py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${
+          className={`py-2.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${
             authMode === 'question'
-              ? 'bg-indigo-600 text-white shadow'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <ShieldQuestion className="w-3.5 h-3.5" />
@@ -134,56 +140,56 @@ export default function CredentialCard({ regNo }) {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {authMode === 'password' ? (
           <div>
-            <label className="block font-semibold text-slate-400 mb-1.5">CURRENT PASSWORD</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wide">Current Password</label>
             <input
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="••••••••"
-              className="bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 w-full"
+              className="portal-input"
               required={authMode === 'password'}
             />
           </div>
         ) : (
           <div>
-            <label className="block font-semibold text-indigo-400 mb-1">SECURITY CHALLENGE</label>
-            <p className="text-slate-300 font-medium mb-2">{securityQuestion}</p>
+            <label className="block text-xs font-semibold text-indigo-400 mb-1 uppercase tracking-wide">Security Challenge</label>
+            <p className="text-xs text-slate-300 font-medium mb-3 bg-white/5 p-3 rounded-lg border border-white/5">{securityQuestion}</p>
             <input
               type="text"
               value={securityAnswer}
               onChange={(e) => setSecurityAnswer(e.target.value)}
               placeholder="Enter recovery answer"
-              className="bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 w-full"
+              className="portal-input"
               required={authMode === 'question'}
             />
           </div>
         )}
 
-        <hr className="border-white/5" />
+        <hr className="border-white/5 my-4" />
 
         <div>
-          <label className="block font-semibold text-slate-400 mb-1.5">NEW PASSWORD</label>
+          <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wide">New Password</label>
           <input
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="At least 6 characters"
-            className="bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 w-full"
+            className="portal-input"
             required
           />
         </div>
 
         <div>
-          <label className="block font-semibold text-slate-400 mb-1.5">CONFIRM NEW PASSWORD</label>
+          <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wide">Confirm New Password</label>
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter new password"
-            className="bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 w-full"
+            className="portal-input"
             required
           />
         </div>
@@ -191,7 +197,7 @@ export default function CredentialCard({ regNo }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 active:scale-98 shadow-lg shadow-indigo-600/20"
+          className="portal-btn w-full mt-2 h-[42px]"
         >
           {loading ? 'Processing...' : 'Update Password'}
         </button>
